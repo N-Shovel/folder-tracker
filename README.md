@@ -54,3 +54,7 @@ src/
     Graphics.cpp         shared Direct2D / DirectWrite setup
 resources/               app icon and version info
 ```
+
+## License
+
+MIT. See [LICENSE](LICENSE).
