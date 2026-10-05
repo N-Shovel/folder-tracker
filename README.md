@@ -17,13 +17,34 @@ One file, about 1.4 MB. Just run it, no install needed.
 
 > **Windows only for now** (Windows 10 and 11). A Linux version is still in the works.
 
-Windows may warn on first launch because the app is not signed: click **More info → Run anyway**.
+## How to use
 
-- **Click** the bubble to open or close the panel. Clicking elsewhere or pressing Esc also closes it.
-- **Drag** the bubble to move it. The panel always opens toward the middle of the screen.
-- **Type** while the panel is open to search. Esc clears the search.
-- **Settings**: click the ⚙ button in the panel, or right-click the bubble (or the tray icon near the clock) for: hide bubble, start with Windows, theme (same as Windows, dark or light), quit.
-- Opening the app again while it runs just opens the panel.
+1. **Run `FolderTracker.exe`.** Windows may warn on first launch because the app is not signed: click **More info → Run anyway**. A round bubble appears near the bottom-right of your screen.
+2. **Click the bubble** to open the panel. Click it again, click anywhere else, or press Esc to close it.
+3. **Add a folder.** Click **Add a folder** (or the folder button in the panel header) and pick the folder that holds your projects, for example `Documents\Projects`. You can add more than one.
+4. **Read the status** next to each folder:
+
+   | Icon | Status | Meaning |
+   |---|---|---|
+   | ☁️ green | **GitHub** | Has git and is linked to GitHub, so it's backed up online. Click the arrow button to open it on GitHub. |
+   | 🖴 amber | **Git only** | Has git, but isn't on GitHub yet. It exists only on this PC. |
+   | ⚠️ gray | **No git** | Not using git at all. |
+
+   Folders with a ▸ arrow have projects inside; click the row to expand it.
+5. **Find a project** by typing anywhere while the panel is open; Esc clears the search. The **GitHub / Git only / No git** tabs show just that group, with a count for each.
+6. **Keep it up to date.** Click ↻ in the header to rescan everything, or use the ↻ and 🗑 buttons on a folder you added to rescan or remove just that one (removing only takes it off the list; nothing is deleted).
+7. **Move the bubble** by dragging it anywhere. The panel always opens toward the middle of the screen.
+
+### Settings
+
+Click ⚙ in the panel, or right-click the bubble or the tray icon near the clock:
+
+- **Hide bubble**: keep only the tray icon. Click the tray icon to bring the bubble back.
+- **Start with Windows**: open Folder Tracker automatically when you sign in.
+- **Theme**: same as Windows, dark or light.
+- **Quit Folder Tracker**
+
+Opening the app again while it's already running just opens the panel.
 
 ## Build
 
@@ -67,6 +88,17 @@ src/
     Graphics.cpp         shared Direct2D / DirectWrite setup
 resources/               app icon and version info
 ```
+
+## Code signing policy
+
+Release builds are made on GitHub Actions from this repository's source ([release.yml](.github/workflows/release.yml)). Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org).
+
+- Committers and reviewers: [N-Shovel](https://github.com/N-Shovel)
+- Approvers: [N-Shovel](https://github.com/N-Shovel)
+
+Every signing request is approved by hand before release.
+
+**Privacy:** Folder Tracker does not send any information to any networked system. It reads folders and `.git/config` files on your PC, and only opens a web page in your browser when you click a GitHub link. Settings stay in `%APPDATA%\Folder Tracker\settings.ini`.
 
 ## License
 

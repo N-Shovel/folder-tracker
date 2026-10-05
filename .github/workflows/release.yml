@@ -1,0 +1,90 @@
+# Builds Folder Tracker.exe on GitHub, signs it through SignPath (once set up),
+# and attaches it to the GitHub release for the tag.
+#
+# Run it by pushing a tag:   git tag v1.2.0 && git push origin v1.2.0
+# or from the Actions tab (Run workflow) to just build and download the exe.
+#
+# Signing turns on by itself once these exist in the repo settings
+# (Settings > Secrets and variables > Actions):
+#   secret   SIGNPATH_API_TOKEN
+#   variable SIGNPATH_ORGANIZATION_ID
+# Until then the exe is built and released unsigned, same as now.
+
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      SIGNPATH_API_TOKEN: ${{ secrets.SIGNPATH_API_TOKEN }}
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          install: >-
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+
+      - name: Build
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+          mkdir -p out
+          cp "build/Folder Tracker.exe" out/FolderTracker.exe
+
+      - name: Upload unsigned exe
+        id: unsigned
+        uses: actions/upload-artifact@v4
+        with:
+          name: FolderTracker-unsigned
+          path: out/FolderTracker.exe
+
+      - name: Sign with SignPath
+        if: env.SIGNPATH_API_TOKEN != ''
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: folder-tracker
+          signing-policy-slug: release-signing
+          github-artifact-id: ${{ steps.unsigned.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: signed
+
+      - name: Use signed exe
+        if: env.SIGNPATH_API_TOKEN != ''
+        run: cp signed/FolderTracker.exe out/FolderTracker.exe
+
+      - name: Upload exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: FolderTracker
+          path: out/FolderTracker.exe
+
+      - name: Attach to GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "${{ github.ref_name }}"
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag out/FolderTracker.exe --clobber
+          } else {
+            gh release create $tag out/FolderTracker.exe --title $tag --generate-notes
+          }

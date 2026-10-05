@@ -14,6 +14,8 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
+            VALUE "CompanyName", "Nimrod P."
+            VALUE "LegalCopyright", "Copyright (c) 2026 Nimrod P. MIT License."
             VALUE "FileDescription", "Folder Tracker"
             VALUE "ProductName", "Folder Tracker"
             VALUE "FileVersion", "1.1.0"
