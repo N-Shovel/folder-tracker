@@ -232,8 +232,10 @@ void PanelView::drawHeader(Painter& painter, const PanelLayout& layout, Hit hove
     const float right = h.right - (layout.corner.right ? bubbleRoom : 10);
     const float cy = centerY(h);
 
-    const D2D1_RECT_F add{right - kButtonSize, cy - kButtonSize / 2, right, cy + kButtonSize / 2};
+    const D2D1_RECT_F settings{right - kButtonSize, cy - kButtonSize / 2, right, cy + kButtonSize / 2};
+    const D2D1_RECT_F add{settings.left - kButtonSize - 2, settings.top, settings.left - 2, settings.bottom};
     const D2D1_RECT_F rescan{add.left - kButtonSize - 2, add.top, add.left - 2, add.bottom};
+    iconButton(painter, settings, icons::kSettings, {Action::Settings}, hovered);
     iconButton(painter, add, icons::kAddFolder, {Action::AddFolder}, hovered);
     iconButton(painter, rescan, icons::kRefresh, {Action::RescanAll}, hovered);
     painter.text(L"Folder Tracker", {left, h.top, rescan.left - 4, h.bottom}, Font::Title, palette().text);

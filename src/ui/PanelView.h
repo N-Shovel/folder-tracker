@@ -13,7 +13,7 @@ class Painter;
 enum class Filter { All, GitHub, Local, Untracked };
 
 // Something clickable. `index` is a tab number, row number or root number depending on the action.
-enum class Action { None, Bubble, AddFolder, RescanAll, FilterTab, Search, ToggleRow, OpenLink, RescanRoot, RemoveRoot };
+enum class Action { None, Bubble, AddFolder, RescanAll, Settings, FilterTab, Search, ToggleRow, OpenLink, RescanRoot, RemoveRoot };
 
 struct Hit {
     Action action = Action::None;

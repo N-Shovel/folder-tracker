@@ -238,6 +238,7 @@ void BubbleWindow::runAction(Hit hit) {
     switch (hit.action) {
         case Action::AddFolder: addFolder(); break;
         case Action::RescanAll: workspace_.rescanAll(); break;
+        case Action::Settings: showMenu(); break;
         case Action::FilterTab: panel_.setFilter(static_cast<Filter>(hit.index)); break;
         case Action::ToggleRow: panel_.toggleRow(hit.index); break;
         case Action::RescanRoot: workspace_.rescan(hit.index); break;
@@ -260,7 +261,10 @@ void BubbleWindow::addFolder() {
 }
 
 void BubbleWindow::showMenu() {
-    switch (const MenuCommand command = showAppMenu(window_, IsWindowVisible(window_), settings_.themeMode())) {
+    ignoreDeactivate_ = true;  // keep the panel open while the menu is up
+    const MenuCommand command = showAppMenu(window_, IsWindowVisible(window_), settings_.themeMode());
+    ignoreDeactivate_ = false;
+    switch (command) {
         case MenuCommand::ToggleBubble: toggleVisible(); break;
         case MenuCommand::StartWithWindows: setStartWithWindows(!startsWithWindows()); break;
         case MenuCommand::ThemeSystem:

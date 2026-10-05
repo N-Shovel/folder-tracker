@@ -40,8 +40,11 @@ inline constexpr Palette kLight{
 };
 
 // Bubble
-inline constexpr D2D1_COLOR_F kBubbleFrom = rgb(0x2f81f7);
-inline constexpr D2D1_COLOR_F kBubbleTo = rgb(0x3fb950);
+inline constexpr D2D1_COLOR_F kBubbleFrom = rgb(0x262c36);  // background, top-left
+inline constexpr D2D1_COLOR_F kBubbleTo = rgb(0x010409);    // background, bottom-right
+inline constexpr D2D1_COLOR_F kBubbleBorder = rgb(0x3d444d);
+inline constexpr D2D1_COLOR_F kBranchFrom = rgb(0x58a6ff);  // branch line, bottom-left
+inline constexpr D2D1_COLOR_F kBranchTo = rgb(0x3fb950);    // branch line, top-right
 inline constexpr float kBubbleSize = 56;
 inline constexpr float kBubbleHoverScale = 1.06f;
 inline constexpr float kBubblePressScale = 0.95f;

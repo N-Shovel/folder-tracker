@@ -14,6 +14,7 @@ inline constexpr wchar_t kDelete = 0xE74D;
 inline constexpr wchar_t kOpenLink = 0xE8A7;
 inline constexpr wchar_t kAddFolder = 0xE8F4;
 inline constexpr wchar_t kSearch = 0xE721;
+inline constexpr wchar_t kSettings = 0xE713;
 
 inline constexpr wchar_t kGitHub = 0xE753;     // cloud: backed up online
 inline constexpr wchar_t kLocal = 0xEDA2;      // hard drive: only on this PC
