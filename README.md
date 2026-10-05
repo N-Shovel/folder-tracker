@@ -4,24 +4,20 @@
 
 A floating desktop bubble, written in C++ with plain Win32 + Direct2D. Click it and a small panel grows out of it, showing your project folders and whether each one is **on GitHub** (cloud), **git only** (drive), or has **no git** (warning). Uses about 6 MB of memory.
 
-<p align="center">
-  <a href="https://github.com/N-Shovel/folder-tracker/releases/latest/download/FolderTracker.exe"><img src="https://img.shields.io/badge/DOWNLOAD-FolderTracker.exe-2ea043?style=for-the-badge" alt="Download FolderTracker.exe"></a>
-  <a href="https://github.com/N-Shovel/folder-tracker/releases/latest"><img src="https://img.shields.io/github/v/release/N-Shovel/folder-tracker?style=for-the-badge&label=LATEST&color=e8743b" alt="Latest release"></a>
-  <img src="https://img.shields.io/badge/PLATFORM-WINDOWS_10_%7C_11-0078d4?style=for-the-badge" alt="Platform: Windows 10 and 11">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-8957e5?style=for-the-badge" alt="License: MIT"></a>
-</p>
-
 <p align="center"><img src="docs/screenshot.png" alt="Folder Tracker panel open, listing example projects with their git status" width="360"></p>
 
 ## Download
 
-<a href="https://github.com/N-Shovel/folder-tracker/releases/latest/download/FolderTracker.exe"><img src="https://img.shields.io/badge/DOWNLOAD-FolderTracker.exe-2ea043?style=for-the-badge" alt="Download FolderTracker.exe"></a>
+| Version | Released | What's new | |
+|---|---|---|---|
+| **1.1.0** (latest) | Oct 6, 2026 | New dark icon and bubble, ⚙ settings button, dark / light theme setting | <a href="https://github.com/N-Shovel/folder-tracker/releases/download/v1.1.0/FolderTracker.exe"><img src="https://img.shields.io/badge/DOWNLOAD-v1.1.0-2ea043?style=for-the-badge" alt="Download v1.1.0"></a> |
+| 1.0.0 | Oct 6, 2026 | First release | <a href="https://github.com/N-Shovel/folder-tracker/releases/download/v1.0.0/FolderTracker.exe"><img src="https://img.shields.io/badge/DOWNLOAD-v1.0.0-555555?style=for-the-badge" alt="Download v1.0.0"></a> |
 
-The latest version, about 1.4 MB. Just run it, no install needed. Older versions are on the [Releases](https://github.com/N-Shovel/folder-tracker/releases) page.
+One file, about 1.4 MB. Just run it, no install needed.
 
-> **Windows only for now.** A Linux version is still in the works.
+> **Windows only for now** (Windows 10 and 11). A Linux version is still in the works.
 
-Works on Windows 10 and 11 (64-bit). The .exe needs nothing else installed. Windows may warn on first launch because the app is not signed: click **More info → Run anyway**.
+Windows may warn on first launch because the app is not signed: click **More info → Run anyway**.
 
 - **Click** the bubble to open or close the panel. Clicking elsewhere or pressing Esc also closes it.
 - **Drag** the bubble to move it. The panel always opens toward the middle of the screen.
