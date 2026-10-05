@@ -14,6 +14,7 @@ bool windowsUsesLightTheme() {
 }
 
 const Palette* current = nullptr;
+ThemeMode mode = ThemeMode::System;
 
 }  // namespace
 
@@ -22,7 +23,15 @@ const Palette& palette() {
     return *current;
 }
 
-void refreshPalette() { current = windowsUsesLightTheme() ? &kLight : &kDark; }
+void setThemeMode(ThemeMode newMode) {
+    mode = newMode;
+    refreshPalette();
+}
+
+void refreshPalette() {
+    const bool light = mode == ThemeMode::System ? windowsUsesLightTheme() : mode == ThemeMode::Light;
+    current = light ? &kLight : &kDark;
+}
 
 D2D1_COLOR_F statusColor(Status status) {
     switch (status) {

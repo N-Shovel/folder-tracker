@@ -2,6 +2,7 @@
 #include <d2d1.h>
 
 #include "core/FolderNode.h"
+#include "platform/Settings.h"
 
 // Look and feel: colors, sizes, fonts and animation timing. Every other UI file reads from here.
 // All sizes are in DIPs (pixels at 100% Windows scaling).
@@ -78,8 +79,9 @@ inline constexpr int kCloseMs = 280;
 inline constexpr float kCloseFadePortion = 0.4f;  // the panel fades out during the last 40% of closing
 inline constexpr float kDragThreshold = 4;        // DIPs the mouse must move before a press counts as a drag
 
-const Palette& palette();  // light or dark, following the Windows setting
-void refreshPalette();     // call when Windows settings change
+const Palette& palette();           // light or dark, from the theme mode
+void setThemeMode(ThemeMode mode);  // System follows the Windows setting
+void refreshPalette();              // call when Windows settings change
 
 D2D1_COLOR_F statusColor(Status status);
 bool hasBadge(Status status);

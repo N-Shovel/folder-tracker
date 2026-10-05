@@ -57,6 +57,17 @@ void Settings::setBubblePosition(POINT center) {
     write(L"Bubble", L"Y", std::to_wstring(center.y));
 }
 
+ThemeMode Settings::themeMode() const {
+    const std::wstring value = read(L"Appearance", L"Theme");
+    if (value == L"dark") return ThemeMode::Dark;
+    if (value == L"light") return ThemeMode::Light;
+    return ThemeMode::System;
+}
+
+void Settings::setThemeMode(ThemeMode mode) {
+    write(L"Appearance", L"Theme", mode == ThemeMode::Dark ? L"dark" : mode == ThemeMode::Light ? L"light" : L"system");
+}
+
 std::wstring Settings::read(const wchar_t* section, const wchar_t* key) const {
     wchar_t buffer[2048] = {};
     GetPrivateProfileStringW(section, key, L"", buffer, DWORD(std::size(buffer)), file_.c_str());

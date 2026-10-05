@@ -10,12 +10,14 @@ A floating desktop bubble, written in C++ with plain Win32 + Direct2D. Click it 
 
 **[Download FolderTracker.exe](https://github.com/N-Shovel/folder-tracker/releases/latest/download/FolderTracker.exe)** (latest version, about 1.4 MB). Just run it, no install needed.
 
+> **Windows only for now.** A Linux version is still in the works.
+
 Works on Windows 10 and 11 (64-bit). The .exe needs nothing else installed. Windows may warn on first launch because the app is not signed: click **More info → Run anyway**.
 
 - **Click** the bubble to open or close the panel. Clicking elsewhere or pressing Esc also closes it.
 - **Drag** the bubble to move it. The panel always opens toward the middle of the screen.
 - **Type** while the panel is open to search. Esc clears the search.
-- **Right-click** the bubble (or the tray icon near the clock) for: hide bubble, start with Windows, quit.
+- **Right-click** the bubble (or the tray icon near the clock) for: hide bubble, start with Windows, theme (same as Windows, dark or light), quit.
 - Opening the app again while it runs just opens the panel.
 
 ## Build

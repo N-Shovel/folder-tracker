@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+enum class ThemeMode { System, Dark, Light };
+
 // Saved between launches in %APPDATA%\Folder Tracker\settings.ini
 class Settings {
 public:
@@ -15,6 +17,9 @@ public:
 
     std::optional<POINT> bubblePosition() const;  // screen position of the bubble's center
     void setBubblePosition(POINT center);
+
+    ThemeMode themeMode() const;
+    void setThemeMode(ThemeMode mode);
 
 private:
     std::wstring read(const wchar_t* section, const wchar_t* key) const;

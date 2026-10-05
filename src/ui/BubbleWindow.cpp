@@ -47,6 +47,7 @@ bool BubbleWindow::create(HINSTANCE instance) {
                               WS_POPUP, 0, 0, 0, 0, nullptr, nullptr, instance, this);
     if (!window_) return false;
 
+    setThemeMode(settings_.themeMode());
     workspace_.attach(window_);
     tray_ = std::make_unique<Tray>(window_, smallIcon);
     taskbarCreatedMessage_ = RegisterWindowMessageW(L"TaskbarCreated");
@@ -259,9 +260,19 @@ void BubbleWindow::addFolder() {
 }
 
 void BubbleWindow::showMenu() {
-    switch (showAppMenu(window_, IsWindowVisible(window_))) {
+    switch (const MenuCommand command = showAppMenu(window_, IsWindowVisible(window_), settings_.themeMode())) {
         case MenuCommand::ToggleBubble: toggleVisible(); break;
         case MenuCommand::StartWithWindows: setStartWithWindows(!startsWithWindows()); break;
+        case MenuCommand::ThemeSystem:
+        case MenuCommand::ThemeDark:
+        case MenuCommand::ThemeLight: {
+            const auto mode = static_cast<ThemeMode>(UINT(command) - UINT(MenuCommand::ThemeSystem));
+            settings_.setThemeMode(mode);
+            setThemeMode(mode);
+            panel_.invalidate();
+            render();
+            break;
+        }
         case MenuCommand::Quit: DestroyWindow(window_); break;
         case MenuCommand::None: break;
     }
