@@ -1,8 +1,14 @@
 # Folder Tracker
 
+### Hi, I'm Nimrod <img src="https://raw.githubusercontent.com/MartinHeinz/MartinHeinz/master/wave.gif" width="28" alt="waving hand">
+
 A floating desktop bubble, written in C++ with plain Win32 + Direct2D. Click it and a small panel grows out of it, showing your project folders and whether each one is **on GitHub** (cloud), **git only** (drive), or has **no git** (warning). Uses about 6 MB of memory.
 
 <p align="center"><img src="docs/screenshot.png" alt="Folder Tracker panel open, listing example projects with their git status" width="360"></p>
+
+## Download
+
+**[Download FolderTracker.exe](https://github.com/N-Shovel/folder-tracker/releases/latest/download/FolderTracker.exe)** (latest version, about 1.4 MB). Just run it, no install needed.
 
 Works on Windows 10 and 11 (64-bit). The .exe needs nothing else installed. Windows may warn on first launch because the app is not signed: click **More info → Run anyway**.
 
