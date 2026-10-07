@@ -3,10 +3,9 @@
 #include <algorithm>
 #include <thread>
 
-#include "Messages.h"
+#include "core/FileSystem.h"
 #include "core/Scanner.h"
-#include "platform/Settings.h"
-#include "platform/Shell.h"
+#include "core/Settings.h"
 
 namespace {
 
@@ -21,7 +20,7 @@ void countTree(const FolderNode& node, StatusCounts& counts) {
 
 Workspace::Workspace(Settings& settings) : settings_(settings) {}
 
-void Workspace::attach(HWND window) { window_ = window; }
+void Workspace::attach(ScanPoster post) { post_ = std::move(post); }
 
 void Workspace::loadSaved() {
     for (const auto& path : settings_.folders()) roots_.push_back({.path = path});
@@ -57,14 +56,14 @@ void Workspace::rescan(size_t index) {
     root.scanning = true;
     root.error.clear();
 
-    std::thread([window = window_, path = root.path, scanId = ++root.scanId] {
+    std::thread([post = post_, path = root.path, scanId = ++root.scanId] {
         auto result = std::make_unique<ScanResult>();
         result->path = path;
         result->scanId = scanId;
         if (isDirectory(path)) result->tree = scanFolder(path);
         else result->error = L"Folder not found";
 
-        if (PostMessageW(window, WM_SCAN_FINISHED, 0, reinterpret_cast<LPARAM>(result.get()))) {
+        if (post && post(result.get())) {
             result.release();  // the window owns it now
         }
     }).detach();

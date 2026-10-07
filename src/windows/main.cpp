@@ -3,10 +3,10 @@
 #include <windows.h>
 #include <objbase.h>
 
-#include "Messages.h"
+#include "windows/Messages.h"
 #include "core/Workspace.h"
-#include "platform/Settings.h"
-#include "ui/BubbleWindow.h"
+#include "core/Settings.h"
+#include "windows/BubbleWindow.h"
 
 int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR, int) {
     SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);

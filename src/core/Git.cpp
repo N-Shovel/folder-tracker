@@ -8,6 +8,7 @@
 #include <sstream>
 #include <vector>
 
+#include "core/FileSystem.h"
 #include "core/Text.h"
 
 namespace fs = std::filesystem;
@@ -30,7 +31,7 @@ std::optional<fs::path> findGitDir(const fs::path& folder) {
     const std::string prefix = "gitdir:";
     if (!text.starts_with(prefix)) return std::nullopt;
 
-    fs::path target(widen(trim(text.substr(prefix.size()))));
+    const fs::path target = pathFromUtf8(trim(text.substr(prefix.size())));
     return target.is_relative() ? folder / target : target;
 }
 
@@ -39,7 +40,7 @@ fs::path configFile(const fs::path& gitDir) {
     const std::string common = trim(readFile(gitDir / L"commondir"));
     if (common.empty()) return gitDir / L"config";
 
-    fs::path commonDir(widen(common));
+    const fs::path commonDir = pathFromUtf8(common);
     return (commonDir.is_relative() ? gitDir / commonDir : commonDir) / L"config";
 }
 
@@ -89,7 +90,7 @@ std::string toWebUrl(std::string url) {
 
 GitInfo readGitInfo(const std::wstring& folder) {
     GitInfo info;
-    const auto gitDir = findGitDir(folder);
+    const auto gitDir = findGitDir(toPath(folder));
     if (!gitDir) return info;
     info.isRepo = true;
 

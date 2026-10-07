@@ -1,6 +1,6 @@
-#include "ui/LayeredSurface.h"
+#include "windows/LayeredSurface.h"
 
-#include "ui/Graphics.h"
+#include "windows/Graphics.h"
 
 LayeredSurface::~LayeredSurface() {
     releaseBitmap();

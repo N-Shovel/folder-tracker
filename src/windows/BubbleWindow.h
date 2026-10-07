@@ -5,7 +5,7 @@
 #include <optional>
 
 #include "ui/Animation.h"
-#include "ui/LayeredSurface.h"
+#include "windows/LayeredSurface.h"
 #include "ui/Layout.h"
 #include "ui/PanelView.h"
 
@@ -32,6 +32,7 @@ private:
     SIZE windowSize() const;
     POINT bubbleCenterOnScreen() const;
     void placeBubble(POINT center);
+    void saveBubblePosition();
 
     // Panel
     void setOpen(bool open);
@@ -40,10 +41,10 @@ private:
     void render();
 
     // Input
-    D2D1_POINT_2F toDips(LPARAM lParam) const;
-    bool isOverBubble(D2D1_POINT_2F point) const;
-    void onLeftDown(D2D1_POINT_2F point);
-    void onMouseMove(D2D1_POINT_2F point);
+    PointF toDips(LPARAM lParam) const;
+    bool isOverBubble(PointF point) const;
+    void onLeftDown(PointF point);
+    void onMouseMove(PointF point);
     void onLeftUp();
     void onKeyDown(WPARAM key);
     void onChar(wchar_t ch);

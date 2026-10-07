@@ -1,5 +1,6 @@
-#include "platform/Settings.h"
+#include "core/Settings.h"
 
+#include <windows.h>
 #include <shlobj.h>
 
 namespace {
@@ -45,14 +46,14 @@ void Settings::setFolders(const std::vector<std::wstring>& folders) {
     for (size_t i = 0; i < folders.size(); ++i) write(L"Folders", std::to_wstring(i).c_str(), folders[i]);
 }
 
-std::optional<POINT> Settings::bubblePosition() const {
+std::optional<ScreenPoint> Settings::bubblePosition() const {
     const std::wstring x = read(L"Bubble", L"X");
     const std::wstring y = read(L"Bubble", L"Y");
     if (x.empty() || y.empty()) return std::nullopt;
-    return POINT{std::stol(x), std::stol(y)};
+    return ScreenPoint{std::stoi(x), std::stoi(y)};
 }
 
-void Settings::setBubblePosition(POINT center) {
+void Settings::setBubblePosition(ScreenPoint center) {
     write(L"Bubble", L"X", std::to_wstring(center.x));
     write(L"Bubble", L"Y", std::to_wstring(center.y));
 }

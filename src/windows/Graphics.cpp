@@ -1,10 +1,12 @@
-#include "ui/Graphics.h"
+#include "windows/Graphics.h"
 
 #include "ui/Theme.h"
 
 using Microsoft::WRL::ComPtr;
 
 namespace {
+
+constexpr wchar_t kFontFamily[] = L"Segoe UI";
 
 // Windows 11 has "Segoe Fluent Icons"; Windows 10 has the older "Segoe MDL2 Assets".
 const wchar_t* findIconFamily(IDWriteFactory* factory) {
@@ -44,16 +46,16 @@ ComPtr<IDWriteTextFormat> Graphics::createFormat(Font font) {
     };
     const Spec spec = [&]() -> Spec {
         switch (font) {
-            case Font::Title: return {theme::kFontFamily, theme::kTitleSize, DWRITE_FONT_WEIGHT_SEMI_BOLD};
-            case Font::Body: return {theme::kFontFamily, theme::kBodySize, DWRITE_FONT_WEIGHT_NORMAL};
-            case Font::BodyBold: return {theme::kFontFamily, theme::kBodySize, DWRITE_FONT_WEIGHT_SEMI_BOLD};
-            case Font::Small: return {theme::kFontFamily, theme::kSmallSize, DWRITE_FONT_WEIGHT_NORMAL};
-            case Font::SmallBold: return {theme::kFontFamily, theme::kSmallSize, DWRITE_FONT_WEIGHT_SEMI_BOLD};
+            case Font::Title: return {kFontFamily, theme::kTitleSize, DWRITE_FONT_WEIGHT_SEMI_BOLD};
+            case Font::Body: return {kFontFamily, theme::kBodySize, DWRITE_FONT_WEIGHT_NORMAL};
+            case Font::BodyBold: return {kFontFamily, theme::kBodySize, DWRITE_FONT_WEIGHT_SEMI_BOLD};
+            case Font::Small: return {kFontFamily, theme::kSmallSize, DWRITE_FONT_WEIGHT_NORMAL};
+            case Font::SmallBold: return {kFontFamily, theme::kSmallSize, DWRITE_FONT_WEIGHT_SEMI_BOLD};
             case Font::Icon: return {iconFamily_, theme::kIconSize, DWRITE_FONT_WEIGHT_NORMAL};
             case Font::IconSmall: return {iconFamily_, theme::kIconSmallSize, DWRITE_FONT_WEIGHT_NORMAL};
             case Font::IconTiny: return {iconFamily_, theme::kIconTinySize, DWRITE_FONT_WEIGHT_NORMAL};
         }
-        return {theme::kFontFamily, theme::kBodySize, DWRITE_FONT_WEIGHT_NORMAL};
+        return {kFontFamily, theme::kBodySize, DWRITE_FONT_WEIGHT_NORMAL};
     }();
 
     ComPtr<IDWriteTextFormat> format;

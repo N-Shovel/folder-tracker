@@ -5,10 +5,9 @@
 
 #include <array>
 
-enum class Font { Title, Body, BodyBold, Small, SmallBold, Icon, IconSmall, IconTiny };
-enum class Align { Left, Center, Right };
+#include "ui/Painter.h"
 
-// Shared Direct2D / DirectWrite objects (created once, used by every frame).
+// Shared Direct2D / DirectWrite objects (created once, used by every frame). Windows only.
 class Graphics {
 public:
     static Graphics& instance();

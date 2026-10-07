@@ -15,7 +15,7 @@ PanelLayout computeLayout(Corner corner) {
 
     // Stack the rows starting from the bubble's edge: header, filter tabs, search box.
     // The folder list fills whatever is left.
-    const D2D1_RECT_F& p = layout.panel;
+    const RectF& p = layout.panel;
     const float left = p.left + kPanelPadding;
     const float right = p.right - kPanelPadding;
     const float listInset = 6;

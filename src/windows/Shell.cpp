@@ -1,4 +1,4 @@
-#include "platform/Shell.h"
+#include "windows/Shell.h"
 
 #include <shellapi.h>
 #include <shobjidl.h>
@@ -37,11 +37,6 @@ void openUrl(const std::wstring& url) {
     if (url.starts_with(L"https://") || url.starts_with(L"http://")) {
         ShellExecuteW(nullptr, L"open", url.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
     }
-}
-
-bool isDirectory(const std::wstring& path) {
-    const DWORD attributes = GetFileAttributesW(path.c_str());
-    return attributes != INVALID_FILE_ATTRIBUTES && (attributes & FILE_ATTRIBUTE_DIRECTORY);
 }
 
 bool startsWithWindows() {

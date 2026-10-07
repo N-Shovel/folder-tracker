@@ -1,4 +1,4 @@
-#include "ui/BubbleWindow.h"
+#include "windows/BubbleWindow.h"
 
 #include <shellscalingapi.h>
 #include <windowsx.h>
@@ -6,15 +6,15 @@
 #include <algorithm>
 #include <cmath>
 
-#include "Messages.h"
+#include "windows/Messages.h"
 #include "core/Workspace.h"
-#include "platform/AppMenu.h"
-#include "platform/Settings.h"
-#include "platform/Shell.h"
-#include "platform/Tray.h"
+#include "windows/AppMenu.h"
+#include "core/Settings.h"
+#include "windows/Shell.h"
+#include "windows/Tray.h"
 #include "resource.h"
 #include "ui/BubbleArt.h"
-#include "ui/Painter.h"
+#include "windows/D2DPainter.h"
 #include "ui/Theme.h"
 
 using namespace theme;
@@ -48,13 +48,15 @@ bool BubbleWindow::create(HINSTANCE instance) {
     if (!window_) return false;
 
     setThemeMode(settings_.themeMode());
-    workspace_.attach(window_);
+    workspace_.attach([window = window_](ScanResult* result) {
+        return PostMessageW(window, WM_SCAN_FINISHED, 0, reinterpret_cast<LPARAM>(result)) != 0;
+    });
     tray_ = std::make_unique<Tray>(window_, smallIcon);
     taskbarCreatedMessage_ = RegisterWindowMessageW(L"TaskbarCreated");
 
     const auto saved = settings_.bubblePosition();
     if (saved) {
-        placeBubble(*saved);
+        placeBubble({saved->x, saved->y});
     } else {
         MONITORINFO info{sizeof(info)};
         GetMonitorInfoW(MonitorFromPoint({0, 0}, MONITOR_DEFAULTTOPRIMARY), &info);
@@ -102,8 +104,13 @@ void BubbleWindow::placeBubble(POINT center) {
     const LONG y = corner_.bottom ? center.y - (size.cy - offset) : center.y - offset;
     position_ = {std::clamp(x, area.left, area.right - size.cx), std::clamp(y, area.top, area.bottom - size.cy)};
 
-    settings_.setBubblePosition(bubbleCenterOnScreen());
+    saveBubblePosition();
     render();
+}
+
+void BubbleWindow::saveBubblePosition() {
+    const POINT center = bubbleCenterOnScreen();
+    settings_.setBubblePosition({int(center.x), int(center.y)});
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -146,7 +153,7 @@ void BubbleWindow::render() {
 
     target->BeginDraw();
     target->Clear(D2D1::ColorF(0, 0, 0, 0));
-    Painter painter(target);
+    D2DPainter painter(target);
     if (t > 0) panel_.draw(painter, layout_, workspace_, eased, opacity, interactive, hovered_);
     drawBubble(painter, layout_.bubbleCenter, eased, hovered_.action == Action::Bubble, drag_ && !drag_->moved);
     target->EndDraw();
@@ -157,15 +164,15 @@ void BubbleWindow::render() {
 // ---------------------------------------------------------------------------------------------
 // Input
 
-D2D1_POINT_2F BubbleWindow::toDips(LPARAM lParam) const {
+PointF BubbleWindow::toDips(LPARAM lParam) const {
     return {GET_X_LPARAM(lParam) / scale(), GET_Y_LPARAM(lParam) / scale()};
 }
 
-bool BubbleWindow::isOverBubble(D2D1_POINT_2F point) const {
+bool BubbleWindow::isOverBubble(PointF point) const {
     return std::hypot(point.x - layout_.bubbleCenter.x, point.y - layout_.bubbleCenter.y) <= kBubbleSize / 2;
 }
 
-void BubbleWindow::onLeftDown(D2D1_POINT_2F point) {
+void BubbleWindow::onLeftDown(PointF point) {
     if (isOverBubble(point)) {
         POINT cursor;
         GetCursorPos(&cursor);
@@ -177,7 +184,7 @@ void BubbleWindow::onLeftDown(D2D1_POINT_2F point) {
     }
 }
 
-void BubbleWindow::onMouseMove(D2D1_POINT_2F point) {
+void BubbleWindow::onMouseMove(PointF point) {
     if (!trackingMouse_) {
         TRACKMOUSEEVENT track{sizeof(track), TME_LEAVE, window_, 0};
         trackingMouse_ = TrackMouseEvent(&track);
@@ -207,7 +214,7 @@ void BubbleWindow::onLeftUp() {
     if (!drag.moved) {
         setOpen(!open_);
     } else if (open_) {
-        settings_.setBubblePosition(bubbleCenterOnScreen());
+        saveBubblePosition();
         render();
     } else {
         placeBubble(bubbleCenterOnScreen());  // may switch corners so the panel opens toward the screen's middle

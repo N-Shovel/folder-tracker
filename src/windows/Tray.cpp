@@ -1,8 +1,8 @@
-#include "platform/Tray.h"
+#include "windows/Tray.h"
 
 #include <cwchar>
 
-#include "Messages.h"
+#include "windows/Messages.h"
 
 Tray::Tray(HWND owner, HICON icon) {
     data_.cbSize = sizeof(data_);

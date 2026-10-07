@@ -1,26 +1,23 @@
 #pragma once
-#include <d2d1.h>
-
 #include "core/FolderNode.h"
-#include "platform/Settings.h"
+#include "core/Settings.h"
+#include "ui/Geometry.h"
 
 // Look and feel: colors, sizes, fonts and animation timing. Every other UI file reads from here.
-// All sizes are in DIPs (pixels at 100% Windows scaling).
+// All sizes are in DIPs (pixels at 100% scaling).
 namespace theme {
 
-constexpr D2D1_COLOR_F rgb(unsigned hex, float alpha = 1.0f) {
+constexpr Color rgb(unsigned hex, float alpha = 1.0f) {
     return {((hex >> 16) & 0xFF) / 255.0f, ((hex >> 8) & 0xFF) / 255.0f, (hex & 0xFF) / 255.0f, alpha};
 }
 
-constexpr D2D1_COLOR_F withAlpha(D2D1_COLOR_F color, float alpha) {
-    return {color.r, color.g, color.b, color.a * alpha};
-}
+constexpr Color withAlpha(Color color, float alpha) { return {color.r, color.g, color.b, color.a * alpha}; }
 
 struct Palette {
-    D2D1_COLOR_F surface, surfaceRaised, surfaceHover, border;
-    D2D1_COLOR_F text, textMuted, accent, danger, onAccent;
-    D2D1_COLOR_F github, local, untracked;
-    D2D1_COLOR_F shadow;
+    Color surface, surfaceRaised, surfaceHover, border;
+    Color text, textMuted, accent, danger, onAccent;
+    Color github, local, untracked;
+    Color shadow;
 };
 
 inline constexpr Palette kDark{
@@ -40,11 +37,11 @@ inline constexpr Palette kLight{
 };
 
 // Bubble
-inline constexpr D2D1_COLOR_F kBubbleFrom = rgb(0x262c36);  // background, top-left
-inline constexpr D2D1_COLOR_F kBubbleTo = rgb(0x010409);    // background, bottom-right
-inline constexpr D2D1_COLOR_F kBubbleBorder = rgb(0x3d444d);
-inline constexpr D2D1_COLOR_F kBranchFrom = rgb(0x58a6ff);  // branch line, bottom-left
-inline constexpr D2D1_COLOR_F kBranchTo = rgb(0x3fb950);    // branch line, top-right
+inline constexpr Color kBubbleFrom = rgb(0x262c36);  // background, top-left
+inline constexpr Color kBubbleTo = rgb(0x010409);    // background, bottom-right
+inline constexpr Color kBubbleBorder = rgb(0x3d444d);
+inline constexpr Color kBranchFrom = rgb(0x58a6ff);  // branch line, bottom-left
+inline constexpr Color kBranchTo = rgb(0x3fb950);    // branch line, top-right
 inline constexpr float kBubbleSize = 56;
 inline constexpr float kBubbleHoverScale = 1.06f;
 inline constexpr float kBubblePressScale = 0.95f;
@@ -67,8 +64,7 @@ inline constexpr float kRootRowHeight = 34;
 inline constexpr float kIndent = 16;
 inline constexpr float kBadgeRadius = 10;
 
-// Text
-inline constexpr wchar_t kFontFamily[] = L"Segoe UI";
+// Text (the font itself is the system's interface font: Segoe UI on Windows, the desktop's font on Linux)
 inline constexpr float kTitleSize = 15;
 inline constexpr float kBodySize = 13;
 inline constexpr float kSmallSize = 12;
@@ -83,10 +79,13 @@ inline constexpr float kCloseFadePortion = 0.4f;  // the panel fades out during 
 inline constexpr float kDragThreshold = 4;        // DIPs the mouse must move before a press counts as a drag
 
 const Palette& palette();           // light or dark, from the theme mode
-void setThemeMode(ThemeMode mode);  // System follows the Windows setting
-void refreshPalette();              // call when Windows settings change
+void setThemeMode(ThemeMode mode);  // System follows the Windows / desktop setting
+void refreshPalette();              // call when the system's light/dark setting changes
 
-D2D1_COLOR_F statusColor(Status status);
+// Each system answers this its own way: windows/SystemTheme.cpp, linux/SystemTheme.cpp.
+bool systemUsesLightTheme();
+
+Color statusColor(Status status);
 bool hasBadge(Status status);
 
 }  // namespace theme

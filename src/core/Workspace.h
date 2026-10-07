@@ -1,6 +1,5 @@
 #pragma once
-#include <windows.h>
-
+#include <functional>
 #include <memory>
 #include <string>
 #include <vector>
@@ -24,7 +23,7 @@ struct StatusCounts {
     int untracked = 0;
 };
 
-// Sent from a scan thread to the window as WM_SCAN_FINISHED.
+// Sent from a scan thread to the window, which passes it back to finishScan().
 struct ScanResult {
     std::wstring path;
     unsigned scanId = 0;
@@ -32,12 +31,15 @@ struct ScanResult {
     std::wstring error;
 };
 
+// Called on a scan thread. Hands the result to the UI thread; returns true if it took ownership.
+using ScanPoster = std::function<bool(ScanResult* result)>;
+
 // The added folders and their scans. Scans run on background threads.
 class Workspace {
 public:
     explicit Workspace(Settings& settings);
 
-    void attach(HWND window);  // scan results are posted to this window
+    void attach(ScanPoster post);  // how scan results get back to the window
     void loadSaved();
 
     const std::vector<RootFolder>& roots() const { return roots_; }
@@ -53,6 +55,6 @@ private:
     void save() const;
 
     Settings& settings_;
-    HWND window_ = nullptr;
+    ScanPoster post_;
     std::vector<RootFolder> roots_;
 };

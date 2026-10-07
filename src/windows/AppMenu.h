@@ -1,7 +1,7 @@
 #pragma once
 #include <windows.h>
 
-#include "platform/Settings.h"
+#include "core/Settings.h"
 
 enum class MenuCommand { None, ToggleBubble, StartWithWindows, ThemeSystem, ThemeDark, ThemeLight, Quit };
 

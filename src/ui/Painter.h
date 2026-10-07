@@ -1,33 +1,63 @@
 #pragma once
-#include <d2d1.h>
-#include <wrl/client.h>
-
 #include <string_view>
+#include <vector>
 
-#include "ui/Graphics.h"
+#include "ui/Geometry.h"
+#include "ui/Icons.h"
 
-// Simple drawing commands on top of Direct2D, used by everything that draws.
+enum class Font { Title, Body, BodyBold, Small, SmallBold, Icon, IconSmall, IconTiny };
+enum class Align { Left, Center, Right };
+
+// A color that fades from `from` at `start` to `to` at `end`.
+struct LinearGradient {
+    PointF start;
+    PointF end;
+    Color from;
+    Color to;
+};
+
+// An open outline made of straight lines and circular arcs (each arc is the short way round).
+struct Path {
+    struct Segment {
+        PointF to;
+        float arcRadius = 0;  // 0 for a straight line
+        bool clockwise = false;
+    };
+    PointF start;
+    std::vector<Segment> segments;
+
+    Path& lineTo(PointF to) { segments.push_back({to}); return *this; }
+    Path& arcTo(PointF to, float radius, bool clockwise) { segments.push_back({to, radius, clockwise}); return *this; }
+};
+
+// Simple drawing commands used by everything that draws. Each system has its own:
+// windows/D2DPainter (Direct2D) and linux/CairoPainter (Cairo + Pango).
 class Painter {
 public:
-    explicit Painter(ID2D1RenderTarget* target);
+    virtual ~Painter() = default;
 
-    ID2D1RenderTarget* target() const { return target_; }
+    virtual void fillRect(const RectF& rect, const Color& color) = 0;
+    virtual void fillRoundRect(const RectF& rect, float radius, const Color& color) = 0;
+    virtual void strokeRoundRect(const RectF& rect, float radius, const Color& color, float strokeWidth = 1) = 0;
+    virtual void fillCircle(PointF center, float radius, const Color& color) = 0;
+    virtual void fillCircle(PointF center, float radius, const LinearGradient& gradient) = 0;
+    virtual void strokeCircle(PointF center, float radius, const Color& color, float strokeWidth = 1) = 0;
+    virtual void line(PointF from, PointF to, const Color& color, float strokeWidth = 1) = 0;
+    virtual void line(PointF from, PointF to, const LinearGradient& gradient, float strokeWidth = 1) = 0;
+    virtual void strokePath(const Path& path, const LinearGradient& gradient, float strokeWidth = 1) = 0;
 
-    void fillRect(const D2D1_RECT_F& rect, const D2D1_COLOR_F& color);
-    void fillRoundRect(const D2D1_RECT_F& rect, float radius, const D2D1_COLOR_F& color);
-    void strokeRoundRect(const D2D1_RECT_F& rect, float radius, const D2D1_COLOR_F& color, float strokeWidth = 1);
-    void fillCircle(D2D1_POINT_2F center, float radius, const D2D1_COLOR_F& color);
-    void strokeCircle(D2D1_POINT_2F center, float radius, const D2D1_COLOR_F& color, float strokeWidth = 1);
-    void line(D2D1_POINT_2F from, D2D1_POINT_2F to, const D2D1_COLOR_F& color, float strokeWidth = 1);
+    virtual void text(std::wstring_view text, const RectF& rect, Font font, const Color& color,
+                      Align align = Align::Left) = 0;
+    virtual void icon(Icon icon, PointF center, Font font, const Color& color) = 0;
+    virtual float textWidth(std::wstring_view text, Font font) const = 0;
 
-    void text(std::wstring_view text, const D2D1_RECT_F& rect, Font font, const D2D1_COLOR_F& color,
-              Align align = Align::Left);
-    void icon(wchar_t glyph, D2D1_POINT_2F center, Font font, const D2D1_COLOR_F& color);
-    float textWidth(std::wstring_view text, Font font) const;
+    // Everything drawn until popLayer() is clipped to a circle and faded to `opacity`.
+    virtual void pushCircleLayer(PointF center, float radius, float opacity) = 0;
+    virtual void popLayer() = 0;
+    virtual void pushClip(const RectF& rect) = 0;
+    virtual void popClip() = 0;
 
-private:
-    ID2D1SolidColorBrush* brush(const D2D1_COLOR_F& color);
-
-    ID2D1RenderTarget* target_;
-    Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> brush_;
+    // Scales by `scale` and rotates by `degrees` (clockwise), both around `center`.
+    virtual void setTransform(PointF center, float scale, float degrees = 0) = 0;
+    virtual void resetTransform() = 0;
 };

@@ -1,30 +1,32 @@
 #pragma once
 #include "core/FolderNode.h"
 
-// Icons are characters from Windows' built-in icon font (Segoe Fluent Icons / Segoe MDL2 Assets).
-// Browse them with the "Character Map" app, or at learn.microsoft.com (search "Segoe Fluent Icons").
+// Every icon the panel uses. Each Painter backend decides how to draw them:
+// Windows uses its built-in icon font (Segoe Fluent Icons / Segoe MDL2 Assets),
+// Linux uses the desktop's symbolic icon theme (Adwaita and friends).
+enum class Icon {
+    Folder,
+    FolderOpen,
+    ChevronRight,
+    ChevronDown,
+    Refresh,
+    Delete,
+    OpenLink,
+    AddFolder,
+    Search,
+    Settings,
+    GitHub,     // cloud: backed up online
+    Local,      // hard drive: only on this PC
+    Untracked,  // warning: no version control at all
+};
+
 namespace icons {
 
-inline constexpr wchar_t kFolder = 0xE8B7;
-inline constexpr wchar_t kFolderOpen = 0xE838;
-inline constexpr wchar_t kChevronRight = 0xE76C;
-inline constexpr wchar_t kChevronDown = 0xE70D;
-inline constexpr wchar_t kRefresh = 0xE72C;
-inline constexpr wchar_t kDelete = 0xE74D;
-inline constexpr wchar_t kOpenLink = 0xE8A7;
-inline constexpr wchar_t kAddFolder = 0xE8F4;
-inline constexpr wchar_t kSearch = 0xE721;
-inline constexpr wchar_t kSettings = 0xE713;
-
-inline constexpr wchar_t kGitHub = 0xE753;     // cloud: backed up online
-inline constexpr wchar_t kLocal = 0xEDA2;      // hard drive: only on this PC
-inline constexpr wchar_t kUntracked = 0xE7BA;  // warning: no version control at all
-
-constexpr wchar_t forStatus(Status status) {
+constexpr Icon forStatus(Status status) {
     switch (status) {
-        case Status::GitHub: return kGitHub;
-        case Status::Local: return kLocal;
-        default: return kUntracked;
+        case Status::GitHub: return Icon::GitHub;
+        case Status::Local: return Icon::Local;
+        default: return Icon::Untracked;
     }
 }
 

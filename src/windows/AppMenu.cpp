@@ -1,6 +1,6 @@
-#include "platform/AppMenu.h"
+#include "windows/AppMenu.h"
 
-#include "platform/Shell.h"
+#include "windows/Shell.h"
 
 MenuCommand showAppMenu(HWND owner, bool bubbleVisible, ThemeMode theme) {
     HMENU themeMenu = CreatePopupMenu();
