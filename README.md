@@ -14,7 +14,7 @@ A floating desktop bubble for Windows and Linux, written in C++ (plain Win32 + D
 | 1.1.0 | Oct 6, 2026 | New dark icon and bubble, ⚙ settings button, dark / light theme setting | <a href="https://github.com/N-Shovel/folder-tracker/releases/download/v1.1.0/FolderTracker.exe"><img src="https://img.shields.io/badge/WINDOWS-v1.1.0-555555?style=for-the-badge" alt="Download v1.1.0 for Windows"></a> |
 | 1.0.0 | Oct 6, 2026 | First release | <a href="https://github.com/N-Shovel/folder-tracker/releases/download/v1.0.0/FolderTracker.exe"><img src="https://img.shields.io/badge/WINDOWS-v1.0.0-555555?style=for-the-badge" alt="Download v1.0.0 for Windows"></a> |
 
-One file each, no install needed.
+One file each, no install needed, and you don't need the source code. Keep the file somewhere it can stay (for example an `Apps` folder) rather than in Downloads: **Start with Windows** / **Start at login** starts it from wherever it is.
 
 - **Windows** 10 and 11: `FolderTracker.exe`, about 1.4 MB.
 - **Linux** (64-bit, Ubuntu 22.04 / Debian 12 / Fedora 36 or newer, any desktop): `FolderTracker-linux-x86_64`. It uses GTK 3, which every desktop Linux already has. On Wayland desktops it runs through XWayland, so it can float and stay where you put it.
@@ -23,11 +23,17 @@ One file each, no install needed.
 
 1. **Run it.** A round bubble appears near the bottom-right of your screen.
    - **Windows:** run `FolderTracker.exe`. Windows may warn on first launch because the app is not signed: click **More info → Run anyway**.
-   - **Linux:** make the file runnable once, then start it (or double-click it in your file manager):
+   - **Linux:** the file has to be made runnable once. Open a terminal, go to the folder you saved it in, and run:
      ```
+     cd ~/Downloads
      chmod +x FolderTracker-linux-x86_64
      ./FolderTracker-linux-x86_64
      ```
+     (Change `~/Downloads` if you saved it somewhere else.) The last line starts it.
+
+     Without a terminal: right-click the file, choose **Properties**, and turn on the option that lets it run as a program (called something like **Allow executing file as program** or **Is executable**, depending on your desktop). Then double-click it. If double-clicking doesn't start it, use the terminal steps.
+
+     The downloaded file isn't added to your app menu. Start it from its folder, or turn on **Start at login** (see Settings).
 2. **Click the bubble** to open the panel. Click it again, click anywhere else, or press Esc to close it.
 3. **Add a folder.** Click **Add a folder** (or the folder button in the panel header) and pick the folder that holds your projects, for example `Documents\Projects`. You can add more than one.
 4. **Read the status** next to each folder:
@@ -48,13 +54,19 @@ One file each, no install needed.
 Click ⚙ in the panel, or right-click the bubble or the tray icon near the clock (on Linux, click the tray icon):
 
 - **Hide bubble**: keep only the tray icon. Click the tray icon to bring the bubble back (on Linux, choose **Show bubble** in its menu, or middle-click it).
-- **Start with Windows** / **Start at login** (Linux): open Folder Tracker automatically when you sign in.
+- **Start with Windows** / **Start at login** (Linux): open Folder Tracker automatically when you sign in. It remembers where the file is, so if you move the file later, turn this off and on again.
 - **Theme**: same as the system, dark or light.
 - **Quit Folder Tracker**
 
 Opening the app again while it's already running just opens the panel (and brings back a hidden bubble).
 
 > **Linux tray icon:** KDE, Ubuntu, Xfce, Cinnamon and most other desktops show it. Plain GNOME needs the [AppIndicator extension](https://extensions.gnome.org/extension/615/appindicator-support/). Without a tray, run Folder Tracker again to bring back a hidden bubble.
+
+### Remove it
+
+1. Turn off **Start with Windows** / **Start at login**, then choose **Quit Folder Tracker**.
+2. Delete the file.
+3. To also remove your saved folder list, delete `%APPDATA%\Folder Tracker` on Windows, or `~/.config/folder-tracker` and `~/.local/share/folder-tracker` (where it keeps its icon) on Linux.
 
 ## Build
 
